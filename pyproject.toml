@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "langchain-azure-ai-inference-plus"
+version = "1.0.0"
+description = "LangChain adapter for an enhanced wrapper for Azure AI Inference SDK with automatic retry, JSON validation, and reasoning separation"
+authors = [{ name = "Zach Grimaldi" }]
+readme = "README.md"
+license = "MIT"
+keywords = [
+    "langchain",
+    "azure",
+    "ai",
+    "foundry",
+    "inference",
+    "retry",
+    "json",
+    "validation",
+    "chat",
+    "completions",
+    "embeddings",
+    "reasoning",
+    "deepseek",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.8"
+dependencies = ["azure-ai-inference-plus>=1.0.0", "langchain-core>=0.1.0"]
+
+[project.optional-dependencies]
+dev = [
+    "build>=1.2.2.post1",
+    "pytest>=6.0",
+    "pytest-asyncio>=0.18.0",
+    "pytest-cov>=2.0",
+    "pytest-mock>=3.0",
+    "black>=22.0",
+    "isort>=5.0",
+    "flake8>=4.0",
+    "mypy>=0.950",
+    "langchain>=0.1.0",
+    "langchain-core>=0.1.0",
+    "langchain-community>=0.3.0",
+    "python-dotenv>=0.19.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/zpg6/langchain-azure-ai-inference-plus"
+Repository = "https://github.com/zpg6/langchain-azure-ai-inference-plus.git"
+Issues = "https://github.com/zpg6/langchain-azure-ai-inference-plus/issues"
+
+[tool.setuptools.packages.find]
+include = ["langchain_azure_ai_inference_plus*"]
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
