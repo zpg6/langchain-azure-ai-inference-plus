@@ -19,7 +19,7 @@ Enhanced LangChain integration for [Azure AI Inference Plus](https://github.com/
 ✅ **Full LangChain support** - works with chains, agents, tools, vector stores  
 ✅ **Embeddings included** - chat models + embeddings in one package  
 ✅ **One import** - no complex Azure SDK setup  
-✅ **100% LangChain compatible** - drop-in replacement for standard Azure integrations
+✅ **100% LangChain compatible** - drop-in replacement model for your current LangChain apps
 
 ## Installation
 
@@ -303,23 +303,6 @@ embeddings = create_azure_embeddings(
 )
 ```
 
-## 📋 Available Models
-
-Works with all Azure AI Foundry models:
-
-**Chat Models:**
-
-- **DeepSeek-R1** - Reasoning-capable model (use with `reasoning_tags`)
-- **GPT-4/GPT-4 Turbo** - General purpose
-- **Codestral-2501** - Code generation and JSON tasks
-- **Phi-4** - Efficient smaller model
-
-**Embedding Models:**
-
-- **text-embedding-3-large** - High-quality embeddings (3,072 dimensions)
-- **text-embedding-3-small** - Efficient embeddings (1,536 dimensions)
-- **text-embedding-ada-002** - General purpose embeddings
-
 ## Examples
 
 Check out the [`examples/`](examples/) directory for complete demonstrations:
@@ -329,17 +312,17 @@ Check out the [`examples/`](examples/) directory for complete demonstrations:
 
 All examples show real-world usage patterns with LangChain components.
 
-## 🆚 Benefits Over Standard LangChain Azure Integration
+## 🆚 Benefits Over Official LangChain Azure Integration [`langchain-azure-ai`](https://github.com/langchain-ai/langchain-azure)
 
-| Feature                  | Standard LangChain Azure     | LangChain Azure AI Inference Plus |
-| ------------------------ | ---------------------------- | --------------------------------- |
-| **Reasoning Separation** | ❌ Manual parsing required   | ✅ Automatic separation           |
-| **JSON Validation**      | ❌ Manual try/catch needed   | ✅ Guaranteed valid JSON          |
-| **Embeddings Support**   | ❌ Separate package required | ✅ Unified chat + embeddings      |
-| **Retry Logic**          | ❌ Manual implementation     | ✅ Built-in exponential backoff   |
-| **Setup Complexity**     | ❌ Complex Azure SDK setup   | ✅ One import, auto-config        |
-| **Model Support**        | ❌ Limited to OpenAI models  | ✅ All Azure AI Foundry models    |
-| **Observability**        | ❌ Limited retry visibility  | ✅ Optional retry callbacks       |
+| Feature                  | langchain-azure-ai             | LangChain Azure AI Inference Plus |
+| ------------------------ | ------------------------------ | --------------------------------- |
+| **Reasoning Separation** | ❌ Manual parsing required     | ✅ Automatic separation           |
+| **JSON Validation**      | ❌ Manual try/catch needed     | ✅ Guaranteed valid JSON          |
+| **Embeddings Support**   | ❌ Separate package required   | ✅ Unified chat + embeddings      |
+| **Retry Logic**          | ❌ Manual implementation       | ✅ Built-in exponential backoff   |
+| **Setup Complexity**     | ⚠️ Multi-step SDK setup        | ✅ One import, auto-config        |
+| **Model Support**        | ✅ All Azure AI Foundry models | ✅ All Azure AI Foundry models    |
+| **Observability**        | ❌ Limited retry visibility    | ✅ Optional retry callbacks       |
 
 ## License
 
@@ -348,18 +331,5 @@ All examples show real-world usage patterns with LangChain components.
 ## Contributing
 
 Contributions are welcome! Whether it's bug fixes, feature additions, or documentation improvements, we appreciate your help in making this project better. For major changes or new features, please open an issue first to discuss what you would like to change.
-
-## 🔗 Related Projects
-
-- [azure-ai-inference-plus](https://github.com/zpg6/azure-ai-inference-plus) - The underlying enhanced Azure AI SDK
-- [LangChain](https://github.com/langchain-ai/langchain) - The LangChain framework
-
-## 🆘 Support
-
-- 📖 [Documentation](https://github.com/zpg6/langchain-azure-ai-inference-plus)
-- 🐛 [Issue Tracker](https://github.com/zpg6/langchain-azure-ai-inference-plus/issues)
-- 💬 [Discussions](https://github.com/zpg6/langchain-azure-ai-inference-plus/discussions)
-
----
 
 Made with ❤️ for the LangChain and Azure AI community
