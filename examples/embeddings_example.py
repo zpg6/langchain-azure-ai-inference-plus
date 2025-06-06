@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 
 from langchain_azure_ai_inference_plus import (
     AzureAIInferencePlusEmbeddings,
-    AzureKeyCredential,
     RetryConfig,
     create_azure_embeddings,
 )
@@ -115,7 +114,7 @@ def main():
         # Perform similarity search with scores
         similar_docs_with_scores = vector_store.similarity_search_with_score(query, k=2)
 
-        print(f"\nSimilarity search with scores:")
+        print("\nSimilarity search with scores:")
         for doc, score in similar_docs_with_scores:
             print(f"Score {score:.4f}: '{doc.page_content}'")
 

@@ -17,7 +17,6 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from langchain_azure_ai_inference_plus import (
     AzureAIInferencePlusChat,
-    AzureKeyCredential,
     RetryConfig,
     create_azure_chat_model,
 )
@@ -137,7 +136,7 @@ def main():
 
     try:
         # Manual client setup with credentials
-        manual_llm = create_azure_chat_model(
+        create_azure_chat_model(
             model_name="gpt-4",
             endpoint="https://your-resource.services.ai.azure.com/models",  # Replace with your endpoint
             api_key="your-api-key-here",  # Replace with your API key
