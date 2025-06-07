@@ -47,8 +47,32 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
 
-    # Example 2: JSON mode with reasoning models (enhanced with LangChain)
-    print("\n=== Example 2: JSON Mode + Reasoning + LangChain Chains ===")
+    # Example 2: DeepSeek reasoning model (basic text mode)
+    print("\n=== Example 2: DeepSeek Reasoning (Basic Text Mode) ===")
+
+    try:
+        # Create DeepSeek reasoning model without JSON mode
+        deepseek_llm = create_azure_chat_model(
+            model_name="DeepSeek-R1",
+            reasoning_tags=["<think>", "</think>"],
+        )
+
+        # Use LangChain message format for a reasoning task
+        messages = [
+            SystemMessage(content="You are a helpful assistant that thinks step by step."),
+            HumanMessage(content="Explain why the sky appears blue during the day."),
+        ]
+
+        response = deepseek_llm.invoke(messages)
+        print(f"Response: {response.content}")
+        
+        # Note: The reasoning process (if any) is automatically extracted and separated
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+    # Example 3: JSON mode with reasoning models (enhanced with LangChain)
+    print("\n=== Example 3: JSON Mode + Reasoning + LangChain Chains ===")
 
     try:
         # Create reasoning model with JSON output
@@ -87,8 +111,8 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
 
-    # Example 3: Enhanced retry configuration (same config, LangChain integration)
-    print("\n=== Example 3: Custom Retry + LangChain Prompt Templates ===")
+    # Example 4: Enhanced retry configuration (same config, LangChain integration)
+    print("\n=== Example 4: Custom Retry + LangChain Prompt Templates ===")
 
     try:
         # Custom retry callbacks
@@ -131,8 +155,8 @@ def main():
     except Exception as e:
         print(f"Error: {e}")
 
-    # Example 4: Manual credential setup
-    print("\n=== Example 4: Manual Credentials ===")
+    # Example 5: Manual credential setup
+    print("\n=== Example 5: Manual Credentials ===")
 
     try:
         # Manual client setup with credentials
@@ -147,8 +171,8 @@ def main():
     except Exception as e:
         print(f"Note: Replace with your actual endpoint and API key: {e}")
 
-    # Example 5: Advanced LangChain features showcase
-    print("\n=== Example 5: Advanced LangChain Features Showcase ===")
+    # Example 6: Advanced LangChain features showcase
+    print("\n=== Example 6: Advanced LangChain Features Showcase ===")
 
     try:
         # Create model for advanced features
