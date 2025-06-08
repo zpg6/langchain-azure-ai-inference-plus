@@ -264,6 +264,87 @@ class TestRetryConfiguration:
             assert call_args["retry_config"] == mock_retry_config
 
 
+class TestConnectionTimeout:
+    """Test connection timeout configuration"""
+
+    def test_connection_timeout_passed_to_client(self):
+        """Test that connection_timeout parameter is properly passed to underlying client"""
+        endpoint = "https://test.openai.azure.com"
+        api_key = "test-key"
+        timeout_value = 60.0
+
+        with patch(
+            "langchain_azure_ai_inference_plus.ChatCompletionsClient"
+        ) as mock_client_class:
+            mock_client = Mock()
+            mock_client_class.return_value = mock_client
+
+            chat_model = AzureAIInferencePlusChat(
+                endpoint=endpoint, 
+                api_key=api_key, 
+                connection_timeout=timeout_value
+            )
+
+            # Verify client was initialized with connection timeout
+            mock_client_class.assert_called_once()
+            call_args = mock_client_class.call_args[1]
+            assert call_args["connection_timeout"] == timeout_value
+
+    def test_connection_timeout_with_env_credentials(self):
+        """Test connection timeout with environment variable credentials"""
+        timeout_value = 45.0
+
+        with patch(
+            "langchain_azure_ai_inference_plus.ChatCompletionsClient"
+        ) as mock_client_class:
+            mock_client = Mock()
+            mock_client_class.return_value = mock_client
+
+            chat_model = AzureAIInferencePlusChat(
+                connection_timeout=timeout_value
+            )
+
+            # Verify client was initialized with connection timeout
+            mock_client_class.assert_called_once()
+            call_args = mock_client_class.call_args[1]
+            assert call_args["connection_timeout"] == timeout_value
+
+    def test_no_connection_timeout_parameter(self):
+        """Test that connection_timeout is not passed when not specified"""
+        endpoint = "https://test.openai.azure.com"
+        api_key = "test-key"
+
+        with patch(
+            "langchain_azure_ai_inference_plus.ChatCompletionsClient"
+        ) as mock_client_class:
+            mock_client = Mock()
+            mock_client_class.return_value = mock_client
+
+            chat_model = AzureAIInferencePlusChat(
+                endpoint=endpoint, 
+                api_key=api_key
+            )
+
+            # Verify client was initialized without connection timeout
+            mock_client_class.assert_called_once()
+            call_args = mock_client_class.call_args[1]
+            assert "connection_timeout" not in call_args
+
+    def test_create_azure_chat_model_with_connection_timeout(self):
+        """Test convenience function with connection timeout"""
+        timeout_value = 120.0
+
+        with patch("langchain_azure_ai_inference_plus.ChatCompletionsClient"):
+            with patch("langchain_azure_ai_inference_plus.RetryConfig"):
+                chat_model = create_azure_chat_model(
+                    model_name="Codestral-2501",
+                    connection_timeout=timeout_value
+                )
+
+                assert isinstance(chat_model, AzureAIInferencePlusChat)
+                assert chat_model.connection_timeout == timeout_value
+
+
 class TestConvenienceFunctions:
     """Test convenience functions for creating models"""
 

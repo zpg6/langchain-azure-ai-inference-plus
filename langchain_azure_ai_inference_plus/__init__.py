@@ -59,6 +59,7 @@ class AzureAIInferencePlusChat(BaseChatModel):
     )  # RetryConfig type causes issues with mocking
     max_retries: int = Field(default=3)
     delay_seconds: float = Field(default=1.0)
+    connection_timeout: Optional[float] = Field(default=None)
 
     def __init__(self, **data):
         """Initialize the chat model and set up the client."""
@@ -76,14 +77,20 @@ class AzureAIInferencePlusChat(BaseChatModel):
 
         # Initialize client
         if self.endpoint and self.api_key:
-            self.client = ChatCompletionsClient(
-                endpoint=self.endpoint,
-                credential=AzureKeyCredential(self.api_key),
-                retry_config=self.retry_config,
-            )
+            client_kwargs = {
+                "endpoint": self.endpoint,
+                "credential": AzureKeyCredential(self.api_key),
+                "retry_config": self.retry_config,
+            }
+            if self.connection_timeout is not None:
+                client_kwargs["connection_timeout"] = self.connection_timeout
+            self.client = ChatCompletionsClient(**client_kwargs)
         else:
             # Use environment variables
-            self.client = ChatCompletionsClient(retry_config=self.retry_config)
+            client_kwargs = {"retry_config": self.retry_config}
+            if self.connection_timeout is not None:
+                client_kwargs["connection_timeout"] = self.connection_timeout
+            self.client = ChatCompletionsClient(**client_kwargs)
 
     def _convert_langchain_to_azure_messages(
         self, messages: List[BaseMessage]
@@ -201,6 +208,7 @@ class AzureAIInferencePlusLLM(BaseLLM):
     reasoning_tags: Optional[List[str]] = Field(default=None)
     response_format: Optional[str] = Field(default=None)
     retry_config: Optional[Any] = Field(default=None)
+    connection_timeout: Optional[float] = Field(default=None)
 
     def __init__(self, **data):
         """Initialize the LLM and set up the client."""
@@ -213,13 +221,19 @@ class AzureAIInferencePlusLLM(BaseLLM):
             self.retry_config = RetryConfig(max_retries=3, delay_seconds=1.0)
 
         if self.endpoint and self.api_key:
-            self.client = ChatCompletionsClient(
-                endpoint=self.endpoint,
-                credential=AzureKeyCredential(self.api_key),
-                retry_config=self.retry_config,
-            )
+            client_kwargs = {
+                "endpoint": self.endpoint,
+                "credential": AzureKeyCredential(self.api_key),
+                "retry_config": self.retry_config,
+            }
+            if self.connection_timeout is not None:
+                client_kwargs["connection_timeout"] = self.connection_timeout
+            self.client = ChatCompletionsClient(**client_kwargs)
         else:
-            self.client = ChatCompletionsClient(retry_config=self.retry_config)
+            client_kwargs = {"retry_config": self.retry_config}
+            if self.connection_timeout is not None:
+                client_kwargs["connection_timeout"] = self.connection_timeout
+            self.client = ChatCompletionsClient(**client_kwargs)
 
     def _call(
         self,
@@ -294,6 +308,7 @@ class AzureAIInferencePlusEmbeddings(Embeddings):
         retry_config: Optional[Any] = None,
         max_retries: int = 3,
         delay_seconds: float = 1.0,
+        connection_timeout: Optional[float] = None,
         **kwargs,
     ):
         """Initialize the embeddings model and set up the client.
@@ -305,6 +320,7 @@ class AzureAIInferencePlusEmbeddings(Embeddings):
             retry_config: Custom retry configuration
             max_retries: Maximum number of retries
             delay_seconds: Initial delay between retries
+            connection_timeout: Connection timeout in seconds
             **kwargs: Additional arguments
         """
         super().__init__()
@@ -315,6 +331,7 @@ class AzureAIInferencePlusEmbeddings(Embeddings):
         self.retry_config = retry_config
         self.max_retries = max_retries
         self.delay_seconds = delay_seconds
+        self.connection_timeout = connection_timeout
         self.client = None
 
         self._setup_client()
@@ -335,14 +352,20 @@ class AzureAIInferencePlusEmbeddings(Embeddings):
             and isinstance(self.endpoint, str)
             and isinstance(self.api_key, str)
         ):
-            self.client = EmbeddingsClient(
-                endpoint=self.endpoint,
-                credential=AzureKeyCredential(self.api_key),
-                retry_config=self.retry_config,
-            )
+            client_kwargs = {
+                "endpoint": self.endpoint,
+                "credential": AzureKeyCredential(self.api_key),
+                "retry_config": self.retry_config,
+            }
+            if self.connection_timeout is not None:
+                client_kwargs["connection_timeout"] = self.connection_timeout
+            self.client = EmbeddingsClient(**client_kwargs)
         else:
             # Use environment variables
-            self.client = EmbeddingsClient(retry_config=self.retry_config)
+            client_kwargs = {"retry_config": self.retry_config}
+            if self.connection_timeout is not None:
+                client_kwargs["connection_timeout"] = self.connection_timeout
+            self.client = EmbeddingsClient(**client_kwargs)
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         """Generate embeddings for a list of documents.
@@ -397,6 +420,7 @@ def create_azure_chat_model(
     api_key: Optional[str] = None,
     reasoning_tags: Optional[List[str]] = None,
     response_format: Optional[str] = None,
+    connection_timeout: Optional[float] = None,
     **kwargs,
 ) -> AzureAIInferencePlusChat:
     """Create an Azure AI Inference Plus chat model with enhanced features.
@@ -407,6 +431,7 @@ def create_azure_chat_model(
         api_key: API key (uses env var if not provided)
         reasoning_tags: Tags for reasoning separation (e.g., ["<think>", "</think>"])
         response_format: "json_object" for guaranteed valid JSON
+        connection_timeout: Connection timeout in seconds
         **kwargs: Additional parameters
 
     Returns:
@@ -418,6 +443,7 @@ def create_azure_chat_model(
         api_key=api_key,
         reasoning_tags=reasoning_tags,
         response_format=response_format,
+        connection_timeout=connection_timeout,
         **kwargs,
     )
 
@@ -426,11 +452,16 @@ def create_azure_llm(
     model_name: str = "gpt-4",
     endpoint: Optional[str] = None,
     api_key: Optional[str] = None,
+    connection_timeout: Optional[float] = None,
     **kwargs,
 ) -> AzureAIInferencePlusLLM:
     """Create an Azure AI Inference Plus LLM."""
     return AzureAIInferencePlusLLM(
-        model_name=model_name, endpoint=endpoint, api_key=api_key, **kwargs
+        model_name=model_name,
+        endpoint=endpoint,
+        api_key=api_key,
+        connection_timeout=connection_timeout,
+        **kwargs,
     )
 
 
@@ -438,6 +469,7 @@ def create_azure_embeddings(
     model_name: str = "text-embedding-3-large",
     endpoint: Optional[str] = None,
     api_key: Optional[str] = None,
+    connection_timeout: Optional[float] = None,
     **kwargs,
 ) -> AzureAIInferencePlusEmbeddings:
     """Create an Azure AI Inference Plus embeddings model with enhanced features.
@@ -446,6 +478,7 @@ def create_azure_embeddings(
         model_name: The embedding model to use (e.g., "text-embedding-3-large", "text-embedding-ada-002")
         endpoint: Azure AI endpoint (uses env var if not provided)
         api_key: API key (uses env var if not provided)
+        connection_timeout: Connection timeout in seconds
         **kwargs: Additional parameters
 
     Returns:
@@ -455,6 +488,7 @@ def create_azure_embeddings(
         model_name=model_name,
         endpoint=endpoint,
         api_key=api_key,
+        connection_timeout=connection_timeout,
         **kwargs,
     )
 

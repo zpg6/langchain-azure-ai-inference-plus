@@ -135,6 +135,7 @@ def main():
         custom_llm = AzureAIInferencePlusChat(
             model_name="Phi-4",
             retry_config=custom_retry_config,
+            connection_timeout=60.0,  # Optional connection timeout
         )
 
         # Create a reusable prompt template

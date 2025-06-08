@@ -160,6 +160,39 @@ class TestAzureAIInferencePlusEmbeddings:
         assert embeddings.retry_config.max_retries == 10
         assert embeddings.retry_config.delay_seconds == 3.0
 
+    @patch("langchain_azure_ai_inference_plus.EmbeddingsClient")
+    def test_connection_timeout_passed_to_client(self, mock_embeddings_client):
+        """Test that connection_timeout parameter is properly passed to embeddings client"""
+        mock_client_instance = MagicMock()
+        mock_embeddings_client.return_value = mock_client_instance
+
+        timeout_value = 30.0
+        embeddings = AzureAIInferencePlusEmbeddings(
+            endpoint="https://test.openai.azure.com",
+            api_key="test-key",
+            connection_timeout=timeout_value
+        )
+
+        # Verify client was initialized with connection timeout
+        mock_embeddings_client.assert_called_once()
+        call_args = mock_embeddings_client.call_args[1]
+        assert call_args["connection_timeout"] == timeout_value
+
+    @patch("langchain_azure_ai_inference_plus.EmbeddingsClient")
+    def test_create_azure_embeddings_with_connection_timeout(self, mock_embeddings_client):
+        """Test convenience function with connection timeout"""
+        mock_client_instance = MagicMock()
+        mock_embeddings_client.return_value = mock_client_instance
+
+        timeout_value = 45.0
+        embeddings = create_azure_embeddings(
+            model_name="text-embedding-ada-002",
+            connection_timeout=timeout_value
+        )
+
+        assert isinstance(embeddings, AzureAIInferencePlusEmbeddings)
+        assert embeddings.connection_timeout == timeout_value
+
     @pytest.mark.asyncio
     @patch("langchain_azure_ai_inference_plus.EmbeddingsClient")
     async def test_async_embed_documents(self, mock_embeddings_client):

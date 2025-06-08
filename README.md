@@ -2,9 +2,9 @@
 
 **The easier way to use Azure AI Inference SDK with LangChain** ✨
 
-[![PyPI version](https://badge.fury.io/py/langchain-azure-ai-inference-plus.svg)](https://badge.fury.io/py/langchain-azure-ai-inference-plus)
+[![PyPI Version](https://img.shields.io/pypi/v/langchain-azure-ai-inference-plus)](https://pypi.org/project/langchain-azure-ai-inference-plus/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/langchain-azure-ai-inference-plus)](https://pypi.org/project/langchain-azure-ai-inference-plus/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/pypi/l/langchain-azure-ai-inference-plus)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
 Enhanced LangChain integration for [Azure AI Inference Plus](https://github.com/zpg6/azure-ai-inference-plus) with **automatic reasoning separation**, **guaranteed JSON validation**, and **smart retries**.
@@ -151,7 +151,7 @@ llm = create_azure_chat_model(model_name="Phi-4")
 result = llm.invoke([HumanMessage(content="Tell me a joke")])
 ```
 
-### ⚙️ Custom Retry (If Needed)
+### ⚙️ Custom Retry Configuration
 
 ```python
 from langchain_azure_ai_inference_plus import AzureAIInferencePlusChat
@@ -174,7 +174,8 @@ custom_retry_config = RetryConfig(
 
 llm = AzureAIInferencePlusChat(
     model_name="Phi-4",
-    retry_config=custom_retry_config
+    retry_config=custom_retry_config,
+    connection_timeout=60.0  # Optional: connection timeout in seconds
 )
 ```
 
