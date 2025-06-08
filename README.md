@@ -21,6 +21,21 @@ Enhanced LangChain integration for [Azure AI Inference Plus](https://github.com/
 ✅ **One import** - no complex Azure SDK setup  
 ✅ **100% LangChain compatible** - drop-in replacement model for your current LangChain apps
 
+## 🛡️ Handles Real-World LLM Issues
+
+Automatic retries for the errors you actually encounter in production:
+
+```
+🔄 Service overloaded (timeouts)     → Auto-retry with backoff
+🔄 Rate limits (429)                 → Smart retry timing
+🔄 Azure service hiccups (5xx)       → Exponential backoff
+🔄 Invalid JSON responses            → Re-request clean JSON
+🔄 Network timeouts                  → Multiple quick attempts
+🔄 Reasoning tag parsing errors      → Automatic fallback
+```
+
+**Just works.** No manual error handling needed in your LangChain apps, allowing you to focus your chains on the actual business logic!
+
 ## Installation
 
 ```bash
